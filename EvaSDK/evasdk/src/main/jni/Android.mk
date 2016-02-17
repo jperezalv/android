@@ -4,6 +4,10 @@ include $(CLEAR_VARS)
 
 LOCAL_MODULE    := audio-flac
 
+LOCAL_C_INCLUDES += $(LOCAL_PATH)/ogg/include
+LOCAL_C_INCLUDES += $(LOCAL_PATH)/flac/include
+LOCAL_C_INCLUDES += $(LOCAL_PATH)/flac/src/libFLAC/include
+
 LOCAL_SRC_FILES := \
 	ogg/src/bitwise.c \
 	ogg/src/framing.c \
@@ -36,6 +40,7 @@ include $(BUILD_STATIC_LIBRARY)
 include $(CLEAR_VARS)
 
 LOCAL_MODULE    := audio-native
+LOCAL_C_INCLUDES += $(LOCAL_PATH)/flac/include
 LOCAL_SRC_FILES := \
 	jni/FLACStreamEncoder.cpp
 LOCAL_LDLIBS := -llog
