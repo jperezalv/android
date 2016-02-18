@@ -251,7 +251,7 @@ public class ProgressWheel extends View {
 
         barColor = a.getColor(R.styleable.EvatureProgressWheel_barColor, barColor);
 
-        barLength = (int) a.getDimension(R.styleable.EvatureProgressWheel_barLength,
+        barLength = (int) a.getDimension(R.styleable.EvatureProgressWheel_pwBarLength,
                 barLength);
 
         textSize = (int) a.getDimension(R.styleable.EvatureProgressWheel_textSize,

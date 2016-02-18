@@ -78,7 +78,7 @@
 		        android:layout_width="76dp"
 		        android:layout_height="76dp"
 		        ProgressWheel:textSize="14sp"
-		        ProgressWheel:barLength="8dp" 
+		        ProgressWheel:pwBarLength="8dp"
 		        ProgressWheel:barColor="#ffffff"
 		        ProgressWheel:pwBarWidth="5dp"
 		        ProgressWheel:rimWidth="0dp" 

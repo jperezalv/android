@@ -13,7 +13,7 @@
         <attr name="circleColor" format="color" />
         <attr name="radius" format="dimension" />
         <attr name="pwBarWidth" format="dimension" />
-        <attr name="barLength" format="dimension" />
+        <attr name="pwBarLength" format="dimension" />
         <attr name="contourColor" format="color"/>
         <attr name="contourSize" format="dimension"/>
         <attr name="barSizeChange" format="boolean" />
