@@ -24,10 +24,10 @@ import java.util.TimeZone;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.client.utils.URIUtils;
-import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.message.BasicNameValuePair;
+//import org.apache.http.NameValuePair;
+//import org.apache.http.client.utils.URIUtils;
+//import org.apache.http.client.utils.URLEncodedUtils;
+//import org.apache.http.message.BasicNameValuePair;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

@@ -1,33 +1,22 @@
 package com.evature.evasdk.util;
 
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpVersion;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.ssl.SSLSocketFactory;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.params.HttpProtocolParams;
-
-import java.io.ByteArrayOutputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
-import java.util.zip.GZIPInputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 
 
 public class DownloadUrl {
     private static final String TAG = "DownloadUrl";
-    private static IDownloader  downloader = new DownloadUrl.DefaultDownloader();
+    private static IDownloader  downloader;
+
+    static {
+        setDownloader(new DownloadUrl.DefaultDownloader());
+    }
 
 	// Iftah: I changed this to be non-static method so that a unit test can inject a mock class and verify URL without trouble
 	//        but added @Singleton - which should make Guice reuse a single instance of this class for each instantiation
@@ -64,10 +53,54 @@ public class DownloadUrl {
 
 
     static class DefaultDownloader implements DownloadUrl.IDownloader {
+        private static final int CONNECT_TIMEOUT = 2500;
+        private static final int READ_TIMEOUT = 3000;
+
+
+        private StringBuilder inputStreamToString(InputStream is) throws UnsupportedEncodingException {
+            String line = "";
+            StringBuilder total = new StringBuilder();
+
+            // Wrap a BufferedReader around the InputStream
+            BufferedReader rd = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+
+            // Read response until the end
+            try {
+                while ((line = rd.readLine()) != null) {
+                    total.append(line);
+                }
+            } catch (IOException e) {
+                DLog.e(TAG, "IOError reading inputStream", e);
+            }
+
+            // Return full string
+            return total;
+        }
 
         // Given a URL, establishes an HttpUrlConnection and retrieves
         // the web page content as a InputStream, which it returns as a string.
         public String get(String myurl) throws IOException {
+            URL url = new URL(myurl);
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setConnectTimeout(CONNECT_TIMEOUT);
+            urlConnection.setReadTimeout(READ_TIMEOUT);
+            urlConnection.setUseCaches(false);
+            try {
+                if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    return inputStreamToString(urlConnection.getInputStream()).toString();
+                }
+                else {
+                    String error = inputStreamToString(urlConnection.getErrorStream()).toString();
+                    DLog.w(TAG, "Error from server: "+error);
+                    return error;
+                }
+
+            } finally {
+                urlConnection.disconnect();
+            }
+        }
+/*
+
             HttpGet request = new HttpGet(myurl);
             request.addHeader("Accept-Encoding", "gzip");
 
@@ -109,17 +142,6 @@ public class DownloadUrl {
                 inputStream = new GZIPInputStream(inputStream);
             }
 
-            ByteArrayOutputStream content = new ByteArrayOutputStream();
-            byte[] sBuffer = new byte[512];
-
-            // Read response into a buffered stream
-            int readBytes = 0;
-            while ((readBytes = inputStream.read(sBuffer)) != -1) {
-                content.write(sBuffer, 0, readBytes);
-            }
-
-            // Return result from buffered stream
-            return new String(content.toByteArray());
-        }
+        }*/
     }
 }

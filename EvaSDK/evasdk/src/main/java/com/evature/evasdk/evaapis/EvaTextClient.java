@@ -28,6 +28,7 @@ import com.evature.evasdk.util.DownloadUrl;
 	// which is displayed in the UI by the AsyncTask's onPostExecute method.
 	public class EvaTextClient extends AsyncTask<Void, Integer, EvaApiReply> {
 
+
 		private static final String TAG = "EvaCallerTask";
 		
 		private final EvaComponent mEva;

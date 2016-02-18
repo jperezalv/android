@@ -1,4 +1,4 @@
-import org.apache.tools.ant.taskdefs.condition.Os
+/*import org.apache.tools.ant.taskdefs.condition.Os*/
 
 
 apply plugin: 'com.android.library'
@@ -6,8 +6,8 @@ apply plugin: 'com.android.library'
 
 
 android {
-    compileSdkVersion 22
-    buildToolsVersion "21.1.2"
+    compileSdkVersion 23
+    buildToolsVersion "23.0.2"
 
     publishNonDefault true   // http://stackoverflow.com/a/29163361/519995
 
@@ -46,7 +46,7 @@ android {
         versionCode code
         versionName name+"."+ code
         minSdkVersion 8
-        targetSdkVersion 22
+        targetSdkVersion 23
     }
 
 
@@ -93,7 +93,7 @@ gradle.projectsEvaluated {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar', '*.so'])
-    compile "com.android.support:support-v4:19+"
+    compile "com.android.support:support-v4:23+"
 }
 
 // http://tools.android.com/tech-docs/new-build-system/tips#TOC-Improving-Build-Server-performance.

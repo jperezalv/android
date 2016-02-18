@@ -20,6 +20,7 @@ import android.graphics.drawable.TransitionDrawable;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.content.ContextCompat;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
@@ -389,7 +390,7 @@ public class EvatureMainView implements OnItemClickListener  {
 		if (what == SearchButtonIcon.FLAT) {
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 				mSearchButton.clearAnimation();
-				AnimatedVectorDrawable animatedDrawable = (AnimatedVectorDrawable) mSearchButton.getResources().getDrawable(R.drawable.evature_animated_microphone);
+				AnimatedVectorDrawable animatedDrawable = (AnimatedVectorDrawable) ContextCompat.getDrawable(mEvaChatScreen.getActivity(), R.drawable.evature_animated_microphone);
 				mSearchButton.setImageDrawable(animatedDrawable);
 				animatedDrawable.start();
 
@@ -433,7 +434,7 @@ public class EvatureMainView implements OnItemClickListener  {
 //			}
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 				mSearchButton.clearAnimation();
-				AnimatedVectorDrawable animatedDrawable = (AnimatedVectorDrawable) mSearchButton.getResources().getDrawable(R.drawable.evature_animated_microphone_reverse);
+				AnimatedVectorDrawable animatedDrawable = (AnimatedVectorDrawable) ContextCompat.getDrawable(mEvaChatScreen.getActivity(), R.drawable.evature_animated_microphone_reverse);
 				mSearchButton.setImageDrawable(animatedDrawable);
 				animatedDrawable.start();
 			}
