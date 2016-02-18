@@ -96,7 +96,7 @@ gradle.projectsEvaluated {
 */
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar', '*.so'])
+    compile fileTree(dir: 'jniLibs', include: ['*.jar', '*.so'])
     compile "com.android.support:support-v4:23+"
 }
 
