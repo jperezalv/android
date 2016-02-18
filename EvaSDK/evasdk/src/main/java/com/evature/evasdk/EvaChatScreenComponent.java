@@ -1389,7 +1389,7 @@ public class EvaChatScreenComponent implements EvaSearchReplyListener, VolumeUti
 
         @Override
         public void onDestroy() {
-            DLog.i(TAG, "Destroying empty fragment, triggerback necessary: " + necessary);
+            DLog.d(TAG, "Destroying empty fragment, triggerback necessary: " + necessary);
             if (necessary) {
                 FragmentManager manager = getFragmentManager();
                 Fragment fragment = manager.findFragmentByTag(EvaChatScreenFragment.TAG);

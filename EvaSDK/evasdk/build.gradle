@@ -21,6 +21,7 @@ android {
         //main.java.srcDirs += 'src/main/generated-sources'
     }
 
+    resourcePrefix 'evature_'
 
     // auto-increment version each build
     def versionPropsFile = file('version.properties')
@@ -37,6 +38,9 @@ android {
     def name = versionProps['VERSION_NAME']
     if (name == null)
         name = "2.0"
+    else
+        name = name.substring(0, name.lastIndexOf("."))
+    name += '.'+code
 
     versionProps['VERSION_CODE']=code.toString()
     versionProps['VERSION_NAME']=name.toString()
@@ -44,7 +48,7 @@ android {
 
     defaultConfig {
         versionCode code
-        versionName name+"."+ code
+        versionName name
         minSdkVersion 8
         targetSdkVersion 23
     }

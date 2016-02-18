@@ -189,6 +189,7 @@ import com.evature.evasdk.util.DownloadUrl;
             try {
                 String result = DownloadUrl.get(evatureUrl);
                 EvaApiReply apiReply = new EvaApiReply(result);
+                DLog.d(TAG, "Got reply: "+apiReply.toString());
                 return apiReply;
             } catch (IOException e) {
                 DLog.w(TAG, "IOException in request to Evature: "+e.getMessage());

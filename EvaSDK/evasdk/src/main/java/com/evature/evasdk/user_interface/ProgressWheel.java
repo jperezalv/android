@@ -234,7 +234,7 @@ public class ProgressWheel extends View {
      * @param a the attributes to parse
      */
     private void parseAttributes(TypedArray a) {
-        barWidth = (int) a.getDimension(R.styleable.EvatureProgressWheel_barWidth,
+        barWidth = (int) a.getDimension(R.styleable.EvatureProgressWheel_pwBarWidth,
                 barWidth);
 
         rimWidth = (int) a.getDimension(R.styleable.EvatureProgressWheel_rimWidth,

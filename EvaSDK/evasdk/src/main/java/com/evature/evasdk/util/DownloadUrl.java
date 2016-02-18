@@ -68,6 +68,7 @@ public class DownloadUrl {
             try {
                 while ((line = rd.readLine()) != null) {
                     total.append(line);
+                    total.append("\n");
                 }
             } catch (IOException e) {
                 DLog.e(TAG, "IOError reading inputStream", e);

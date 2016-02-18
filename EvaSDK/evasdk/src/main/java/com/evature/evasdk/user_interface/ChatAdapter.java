@@ -322,9 +322,9 @@ public class ChatAdapter extends ArrayAdapter<ChatItem> {
 		}
 		else { 
 			float from = 1f;
-			float to = 0f;
+			float to = 0.01f;
 			if (step == DismissStep.ANIMATE_RESTORE) {
-				from = 0f;
+				from = 0.01f;
 				to = 1f;
 			}
 			for (ChatItem item: itemsToDismiss) {

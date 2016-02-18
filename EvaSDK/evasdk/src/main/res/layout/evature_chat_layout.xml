@@ -80,7 +80,7 @@
 		        ProgressWheel:textSize="14sp"
 		        ProgressWheel:barLength="8dp" 
 		        ProgressWheel:barColor="#ffffff"
-		        ProgressWheel:barWidth="5dp"
+		        ProgressWheel:pwBarWidth="5dp"
 		        ProgressWheel:rimWidth="0dp" 
 		        ProgressWheel:spinSpeed="3dp"
 		        ProgressWheel:barSizeChange="true"
