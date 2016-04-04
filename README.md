@@ -346,8 +346,9 @@ The value can be either the Geoname ID for the home location (see [http://www.ge
 Example (Geoname ID): "home=5128581" means home is New York City - [http://www.geonames.org/5128581](http://www.geonames.org/5128581). 
 Example (name string): "home=paris" means the home is Paris, France, or "home=paris TX" means home is Paris Texas.
 
-6. resetUserAdaptation - if True, erase user acoustic adaptation data from previous utterances.
-For one-time reset of adaptation data, configure resetUserAdaptation=True, then start a new recording, and set resetUserAdaptation=False before starting any future recordings; for never using adaptation from previous utterances, set resetUserAdaptation=True constantly.
+6. resetUserAdaptation - if set to True, erases the user acoustic adaptation data from the previous utterances.
+For not using user adaptation from previous utterances, set resetUserAdaptation=True.
+For a one-time reset of adaptation data, configure resetUserAdaptation=True, then start a new recording, and set resetUserAdaptation=False before starting any future recordings. 
 
 ## Building the SDK from Source Code
 
