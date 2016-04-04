@@ -1,12 +1,15 @@
 package com.evature.evasdk;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.PermissionChecker;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +18,10 @@ import android.widget.RelativeLayout;
 
 import com.evature.evasdk.appinterface.AppScope;
 import com.evature.evasdk.appinterface.AppSetup;
+import com.evature.evasdk.appinterface.PermissionsRequiredHandler;
+import com.evature.evasdk.evaapis.EvaComponent;
 import com.evature.evasdk.evaapis.EvaSpeak;
+import com.evature.evasdk.util.DLog;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -26,7 +32,10 @@ import java.util.ArrayList;
 public class EvaChatTrigger {
 
     private static final String TAG = "EvaChatTrigger";
+
+    // these buttons will be hidden/displayed when the Eva chat screen is opened/closed
     public static ArrayList<WeakReference<ImageButton>> evaButtons = new ArrayList<WeakReference<ImageButton>>();
+
     private static float MARGIN_BOTTOM = 24;  // margin in DIP
 
     public static void addDefaultButton(FragmentActivity activity) {
@@ -101,7 +110,7 @@ public class EvaChatTrigger {
 
     public static void setOverlayBelowActionBar(Context context) {
         final TypedArray styledAttributes = context.getTheme().obtainStyledAttributes(
-                new int[] { android.R.attr.actionBarSize });
+                new int[]{android.R.attr.actionBarSize});
         int actionBarSize = (int) styledAttributes.getDimension(0, 0);
         styledAttributes.recycle();
         ViewGroup.MarginLayoutParams params = new ViewGroup.MarginLayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
@@ -122,6 +131,38 @@ public class EvaChatTrigger {
         return (ViewGroup) rootView;
     }
 
+    private static boolean checkPermissions(FragmentActivity activity) {
+        String[] permissionsToCheck;
+        if (AppSetup.locationTracking) {
+            permissionsToCheck = new String[] {
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.RECORD_AUDIO
+            };
+        }
+        else {
+            permissionsToCheck = new String[] {
+                    Manifest.permission.RECORD_AUDIO
+            };
+        }
+        ArrayList<String> missingPermissions = new ArrayList<String>();
+        for (String perm : permissionsToCheck) {
+            if (PackageManager.PERMISSION_GRANTED != PermissionChecker.checkSelfPermission(activity, perm)) {
+                missingPermissions.add(perm);
+            }
+        }
+
+        if (missingPermissions.size() > 0) {
+            DLog.i(TAG, "Eva cannot start due to missing permissions: " + missingPermissions.toString());
+            if (EvaComponent.evaAppHandler instanceof PermissionsRequiredHandler) {
+                String[] missingPermissionsArray = missingPermissions.toArray(new String[missingPermissions.size()]);
+                ((PermissionsRequiredHandler)EvaComponent.evaAppHandler).handleMissingPermissions(missingPermissionsArray);
+            }
+            return false;
+        }
+
+        return true;
+    }
+
     public static void startSearchByVoice(FragmentActivity activity) {
         startSearchByVoice(activity, null);
     }
@@ -135,21 +176,40 @@ public class EvaChatTrigger {
             theIntent.putExtra(EvaChatScreenComponent.INTENT_EVA_CONTEXT, evaContext.toString());
         }
 
+        boolean hasPermissions = checkPermissions(activity);
+        if (!hasPermissions) {
+            return;
+        }
+
+
         Fragment newFragment = new EvaChatScreenFragment();
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out, android.R.anim.fade_in, android.R.anim.fade_out);
         transaction.add(R.id.evature_root_view, newFragment, EvaChatScreenFragment.TAG);
         transaction.addToBackStack(null);
-        transaction.commit();
+        transaction.commitAllowingStateLoss();
     }
 
 
+    private static EvaChatScreenFragment getEvaChatFragment(Context activity) {
+        if (activity instanceof FragmentActivity) {
+            FragmentActivity fa = (FragmentActivity) activity;
+            FragmentManager manager = fa.getSupportFragmentManager();
+            Fragment fragment = manager.findFragmentByTag(EvaChatScreenFragment.TAG);
+            EvaChatScreenFragment evaChatScreenFragment = (EvaChatScreenFragment) fragment;
+            return evaChatScreenFragment;
+        }
+        return null;
+    }
+
     public static void closeChatScreen(Context activity) {
-        FragmentActivity fa = (FragmentActivity)activity;
-        FragmentManager manager = fa.getSupportFragmentManager();
-        Fragment fragment = manager.findFragmentByTag(EvaChatScreenFragment.TAG);
-        EvaChatScreenFragment evaChatScreenFragment = (EvaChatScreenFragment) fragment;
-        evaChatScreenFragment.closeChatFragment();
+        EvaChatScreenFragment evaChatScreenFragment = getEvaChatFragment(activity);
+        if (evaChatScreenFragment != null) {
+            evaChatScreenFragment.closeChatFragment();
+        }
+        else {
+            DLog.w(TAG, "No EvaChatScreenFragment to close");
+        }
     }
 
     public static void startSearchByVoiceActivity( Context activity, AppScope evaContext) {

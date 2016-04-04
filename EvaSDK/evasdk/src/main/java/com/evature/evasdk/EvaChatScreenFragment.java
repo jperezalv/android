@@ -53,6 +53,10 @@ public class EvaChatScreenFragment extends Fragment {
         chatScreen.onSaveInstanceState(savedInstanceState);
     }
 
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        DLog.i(TAG, "onRequestPermissionsResult "+requestCode);
+    }
+
 /*  @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -60,6 +64,7 @@ public class EvaChatScreenFragment extends Fragment {
         setIntent(intent);
     }
 */
+
     @Override
     public void onPause() {
         chatScreen.onPause();

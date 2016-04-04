@@ -16,7 +16,7 @@ public class EvaLocationUpdater implements LocationListener {
 	private static final String TAG = "EvatureLocationUpdater";
 	
 	public static final double NO_LOCATION = -9999999.0;
-	
+
 	private LocationManager locationManager;
 	private Location currentLocation = null;
 
@@ -25,7 +25,12 @@ public class EvaLocationUpdater implements LocationListener {
 	}
 
 	public void stopGPS() {
-		locationManager.removeUpdates(this);
+        try {
+            locationManager.removeUpdates(this);
+        }
+        catch(SecurityException e) {
+            DLog.w(TAG, "Permission error", e);
+        }
 	}
 
 	public void startGPS() {
@@ -44,17 +49,22 @@ public class EvaLocationUpdater implements LocationListener {
 			DLog.w(TAG, "No NETWORK_PROVIDER?");
 		}
 
-		// if enabled, set updates from GPS location provider
-		if (gps_enabled)
-			locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, UPDATE_DELAY, UPDATE_DISTANCE, this);
+        try {
+            // if enabled, set updates from GPS location provider
+            if (gps_enabled)
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, UPDATE_DELAY, UPDATE_DISTANCE, this);
 
-		if (network_enabled)
-			locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, UPDATE_DELAY, UPDATE_DISTANCE,
-					this);
+            if (network_enabled)
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, UPDATE_DELAY, UPDATE_DISTANCE,
+                        this);
 
-		currentLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-		if (currentLocation == null)
-			currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            currentLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            if (currentLocation == null)
+                currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        }
+        catch(SecurityException e) {
+            DLog.w(TAG, "Permission error", e);
+        }
 	}
 
 	public Location getLocation() {

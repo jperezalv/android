@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.speech.RecognizerIntent;
 
 import com.evature.evasdk.BuildConfig;
+import com.evature.evasdk.appinterface.EvaLifeCycleListener;
 import com.evature.evasdk.evaapis.crossplatform.EvaApiReply;
 import com.evature.evasdk.util.DLog;
 
@@ -87,9 +88,9 @@ public class EvaComponent implements
 		public String vproxyHost;
 		public String webServiceHost;
 		public String apiVersion;
-		
+
 		public HashMap<String, String> extraParams;
-		
+
 		public EvaConfig(String apiKey, String siteCode) {
             this.siteCode = siteCode;
             this.apiKey = apiKey;
@@ -100,10 +101,6 @@ public class EvaComponent implements
 			apiVersion = DefaultApiVersion;
 			locationEnabled = false;
 			extraParams = new HashMap<String,String>();
-		}
-
-		public void setParameter(String key, String value) {
-			extraParams.put(key, value);
 		}
 
     }
@@ -651,11 +648,7 @@ public class EvaComponent implements
 	public void setApiKey(String apiKey) {
 		mConfig.apiKey = apiKey;
 	}
-	
-	public void setParameter(String key, String value) {
-		mConfig.setParameter(key, value);
-	}
-	
+
 	public HashMap<String, String> getExtraParams() {
 		return mConfig.extraParams;
 	}

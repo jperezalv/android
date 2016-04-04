@@ -2,7 +2,6 @@ package com.evature.evasdk;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -64,7 +63,7 @@ import com.evature.evasdk.util.VolumeUtil;
 /****
  *  User interface parts of the Evature chat screen 
  */
-public class EvatureMainView implements OnItemClickListener  {
+public class EvatureMainView implements OnItemClickListener, EvaChatApi {
 
 	private static final String TAG = "EvatureMainView";
 	private ImageButton mSearchButton;
@@ -716,6 +715,7 @@ public class EvatureMainView implements OnItemClickListener  {
 		private boolean processing = false;
 		private EvaSpeechRecogComponent speechSearch;
 		private EvatureMainView view;
+        private int lastInd = -1;
 		
 		public SearchHandler(EvaSpeechRecogComponent speechSearch, EvatureMainView view) {
 			this.speechSearch = speechSearch;
@@ -731,13 +731,16 @@ public class EvatureMainView implements OnItemClickListener  {
 			SpeechAudioStreamer speechAudioStreamer = speechSearch.getSpeechAudioStreamer();
 
 			if (speechAudioStreamer.getIsRecording()) {
-				view.mSoundView.setSoundData(
-						speechAudioStreamer.getSoundLevelBuffer(), 
-						speechAudioStreamer.getBufferIndex()
-				);
-				//view.mSoundView.stopSpringAnimation();
-				if (view.mSoundView.getVisibility() != View.VISIBLE)
-					view.mSoundView.setVisibility(View.VISIBLE);
+                if (speechAudioStreamer.getBufferIndex() != lastInd) {
+                    lastInd = speechAudioStreamer.getBufferIndex();
+                    view.mSoundView.setSoundData(
+                            speechAudioStreamer.getSoundLevelBuffer(),
+                            speechAudioStreamer.getBufferIndex()
+                    );
+                    //view.mSoundView.stopSpringAnimation();
+                    if (view.mSoundView.getVisibility() != View.VISIBLE)
+                        view.mSoundView.setVisibility(View.VISIBLE);
+                }
 				
 			}
 			else {

@@ -21,6 +21,7 @@ public class SoundLevelView extends View {
 	private Paint paint;
 	private float peakSound;
 	private float minSound;
+    private float lineWidth;
 
 	private int gravity;
 	private float xstep;
@@ -38,11 +39,15 @@ public class SoundLevelView extends View {
 		this.peakSound = Integer.MIN_VALUE;
 		this.minSound = Integer.MAX_VALUE;
 		//paint.setColor(Color.GREEN);
+
+        final float scale = context.getResources().getDisplayMetrics().density;
+        // Convert the dps to pixels, based on density scale
 		paint.setColor(0xff44aaff);
 		paint.setAntiAlias(true);
 		paint.setStyle(Paint.Style.STROKE);
 		paint.setStrokeJoin(Join.ROUND);
-		paint.setStrokeWidth(4);
+        this.lineWidth = 2 * scale;
+		paint.setStrokeWidth(lineWidth);
 		gravity = Gravity.CENTER_HORIZONTAL;
 		xstep = 0;
 	}
@@ -92,7 +97,7 @@ public class SoundLevelView extends View {
 		
 		float curX;
 		if ((gravity & Gravity.RIGHT) == Gravity.RIGHT){
-			curX = width - numOfPoints * xStep3;
+			curX =  width - numOfPoints * xStep3;
 		}
 		else if ((gravity & Gravity.LEFT) == Gravity.LEFT) {
 			curX = 0;

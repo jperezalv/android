@@ -36,6 +36,7 @@ import com.evature.evasdk.appinterface.CarCount;
 import com.evature.evasdk.appinterface.CarSearch;
 import com.evature.evasdk.appinterface.CruiseCount;
 import com.evature.evasdk.appinterface.CruiseSearch;
+import com.evature.evasdk.appinterface.EvaLifeCycleListener;
 import com.evature.evasdk.appinterface.FlightCount;
 import com.evature.evasdk.appinterface.FlightSearch;
 import com.evature.evasdk.appinterface.HotelCount;
@@ -191,12 +192,7 @@ public class EvaChatScreenComponent implements EvaSearchReplyListener, VolumeUti
             config.scope = AppSetup.scopeStr;
         }
         config.context = theIntent.getStringExtra(INTENT_EVA_CONTEXT);
-
-        for (String key : AppSetup.extraParams.keySet()) {
-            String val = AppSetup.extraParams.get(key);
-            if (val != null)
-                config.extraParams.put(key, val);
-        }
+        config.extraParams = AppSetup.extraParams;
 
         config.locationEnabled = AppSetup.locationTracking;
 
@@ -892,6 +888,10 @@ public class EvaChatScreenComponent implements EvaSearchReplyListener, VolumeUti
 
 		eva.onResume();
 		VolumeUtil.register(activity, this);
+
+        if (EvaComponent.evaAppHandler != null && EvaComponent.evaAppHandler instanceof EvaLifeCycleListener) {
+            ((EvaLifeCycleListener) EvaComponent.evaAppHandler).onResume(mView);
+        }
 		
 	}
 
@@ -929,7 +929,12 @@ public class EvaChatScreenComponent implements EvaSearchReplyListener, VolumeUti
 		   mView.deactivateSearchButton();
 	    }
 		VolumeUtil.unregister(activity);
-	}
+
+        if (EvaComponent.evaAppHandler != null && EvaComponent.evaAppHandler instanceof EvaLifeCycleListener) {
+            ((EvaLifeCycleListener) EvaComponent.evaAppHandler).onPause();
+        }
+
+    }
 
     public void onDestroy() {
 		eva.onDestroy();
