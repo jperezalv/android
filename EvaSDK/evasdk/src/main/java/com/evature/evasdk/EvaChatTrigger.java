@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.PermissionChecker;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -131,7 +132,7 @@ public class EvaChatTrigger {
         return (ViewGroup) rootView;
     }
 
-    private static boolean checkPermissions(FragmentActivity activity) {
+    private static boolean checkPermissions(Context context) {
         String[] permissionsToCheck;
         if (AppSetup.locationTracking) {
             permissionsToCheck = new String[] {
@@ -146,13 +147,13 @@ public class EvaChatTrigger {
         }
         ArrayList<String> missingPermissions = new ArrayList<String>();
         for (String perm : permissionsToCheck) {
-            if (PackageManager.PERMISSION_GRANTED != PermissionChecker.checkSelfPermission(activity, perm)) {
+            if (PackageManager.PERMISSION_GRANTED != PermissionChecker.checkSelfPermission(context, perm)) {
                 missingPermissions.add(perm);
             }
         }
 
         if (missingPermissions.size() > 0) {
-            DLog.i(TAG, "Eva cannot start due to missing permissions: " + missingPermissions.toString());
+            Log.i(TAG, "Eva cannot start due to missing permissions: " + missingPermissions.toString());
             if (EvaComponent.evaAppHandler instanceof PermissionsRequiredHandler) {
                 String[] missingPermissionsArray = missingPermissions.toArray(new String[missingPermissions.size()]);
                 ((PermissionsRequiredHandler)EvaComponent.evaAppHandler).handleMissingPermissions(missingPermissionsArray);
@@ -213,22 +214,15 @@ public class EvaChatTrigger {
     }
 
     public static void startSearchByVoiceActivity( Context activity, AppScope evaContext) {
-       /* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Window window = activity.getWindow();
-            window.addFlags(Window.FEATURE_ACTIVITY_TRANSITIONS);
-            window.setSharedElementEnterTransition(new ChangeImageTransform());
-            window.setSharedElementExitTransition(new ChangeImageTransform());
-            ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(activity, searchButton, "eva_microphone_button");
-            Intent intent = new Intent(activity, EvaChatScreenComponent.class);
-            activity.startActivity(intent, options.toBundle());
+        boolean hasPermissions = checkPermissions(activity);
+        if (!hasPermissions) {
+            return;
         }
-        else {*/
 
-            Intent intent = new Intent(activity, EvaChatScreenActivity.class);
-            if (evaContext != null) {
-                intent.putExtra(EvaChatScreenComponent.INTENT_EVA_CONTEXT, evaContext.toString());
-            }
-            activity.startActivity(intent);
-        //}
+        Intent intent = new Intent(activity, EvaChatScreenActivity.class);
+        if (evaContext != null) {
+            intent.putExtra(EvaChatScreenComponent.INTENT_EVA_CONTEXT, evaContext.toString());
+        }
+        activity.startActivity(intent);
     }
 }

@@ -34,17 +34,10 @@ android {
         code = 0
     else
         code = code.toInteger()
-    code += 1
+
     def name = versionProps['VERSION_NAME']
     if (name == null)
-        name = "2.0"
-    else
-        name = name.substring(0, name.lastIndexOf("."))
-    name += '.'+code
-
-    versionProps['VERSION_CODE']=code.toString()
-    versionProps['VERSION_NAME']=name.toString()
-    versionProps.store(versionPropsFile.newWriter(), null)
+        name = "2.0."+code
 
     defaultConfig {
         versionCode code
