@@ -10,7 +10,7 @@ Version 2.0
 
 
 - [Introduction](#introduction)
-- [Step 1: Setup the SDK in your IDE](#step-1-setup-the-sdk-in-your-ide)
+- [Step 1: Setup the SDK in your IDE](#step-1-include-the-sdk-in-your-android-studio-project)
 - [Step 2: Initialize and Configure Eva](#step-2-initialize-and-configure-eva)
 - [Step 3: Add the microphone button!](#step-3-add-the-microphone-button)
   - [Mini Integration Test - Say Hi!](#mini-integration-test---say-hi)
@@ -55,24 +55,27 @@ The SDK is open source. Fork us [on Github](https://github.com/evature/android)!
 
 ## Step 1: Include the SDK in your Android Studio Project
 
-1. 
-Download the compiled SDK as two AAR files, and place them in your project:
-[evasdk-debug.aar](https://raw.githubusercontent.com/evature/android/master/EvaSDK/evasdk/build/outputs/aar/evasdk-debug.aar) and [evasdk-release.aar](https://raw.githubusercontent.com/evature/android/master/EvaSDK/evasdk/build/outputs/aar/evasdk-release.aar)
+1. Modify your project's top level build.grade, add jitpack.io to the repositories configuration:
 
-2. modify your project's build.grade:
-``` gradle
-repositories {
-    flatDir {
-        dirs '<the folder where you placed the aar files>'
-    }
-}
+  ``` gradle
+    // to your repositories add:
+    maven { url "https://jitpack.io" }
+  ```
+  
+2. Modify your app's build.gradle and add to your depedencies:
+
+  To get the latest-and-greatest version use:
+  ``` gradle
     // to your dependencies add:
-    debugCompile(name:'evasdk-debug', ext:'aar')
-    releaseCompile(name:'evasdk-release', ext:'aar')
-```
-
-3. 
-If you wish to build the library yourself - see [Building the SDK from Source Code](#building-the-sdk-from-source-code) below.
+    compile 'com.github.evature:android:master-SNAPSHOT'
+  ```
+  If you prefer to use a certain release (eg. 2.0.229) use:
+  ``` gradle
+    // to your dependencies add:
+    compile 'com.github.evature:android:2.0.229'
+  ```
+  
+3. If you wish to build the library yourself - see [Building the SDK from Source Code](#building-the-sdk-from-source-code) below.
 
 **Verify Step 1:**
 
